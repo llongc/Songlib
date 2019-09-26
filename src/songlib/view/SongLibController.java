@@ -4,19 +4,15 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
@@ -25,8 +21,8 @@ import javafx.stage.Window;
 import Operations.operation;
 import Song.songs;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
+import java.util.Optional;
 
 public class SongLibController {
 	@FXML
@@ -93,6 +89,7 @@ public class SongLibController {
 	    nyear.setPromptText("Year: ");
 	    dialogPane.setContent(new VBox(5, nname, nartist, nalbum, nyear));
 	    Platform.runLater(nname::requestFocus);
+
 	    dialog.setResultConverter((ButtonType button) -> {
 	    	if(button == ButtonType.OK) {
 	    		if(nname.getText().isEmpty() || nname.getText().isEmpty()) {
@@ -100,15 +97,27 @@ public class SongLibController {
 	    			alert.setTitle("Warning");
 	                alert.setHeaderText("Required Fields Empty");
 	                alert.setContentText("You need to fill out name and artist at least.");
-
 	                alert.showAndWait();
 	                return null;
+	    		}
+	    		songs result = operation.add(nname.getText(), 
+	    				nartist.getText(), nalbum.getText(), nyear.getText());
+	    		if(result == null) {
+		    		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		    		alert.setContentText("This song has already inside the database.");
+		    		alert.showAndWait();
+		    		return null;
+	    		} else {
+	    			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		    		alert.setContentText("Successfully add new song.");
+		    		alert.showAndWait();
+	    			return result;
 	    		}
 	    	}
 	    	return null;
 	    });
-		dialog.show();
-		
+	    Optional<songs> optionalResult = dialog.showAndWait();
+	    if (optionalResult.isPresent()) { obsList.add(optionalResult.get()); }
 		
 	    
 	}

@@ -24,6 +24,8 @@ class songComparator implements Comparator<songs>{
 	}
 }
 public class operation {
+	private static Set<String> map = new HashSet<>();
+	
 	public static List<songs> loadlib() throws IOException{
 		String content;
 		
@@ -44,9 +46,23 @@ public class operation {
 			s.setAlbum(present[2]);
 			s.setYear(Integer.parseInt(present[3]));
 			res.add(s);
+			map.add(present[0]+" "+present[1]);
 		}
 		
 		Collections.sort(res, new songComparator());
 		return res;
+	}
+	public static songs add(String name, String artist, String album, String year) {
+		
+		name = name.toLowerCase();
+		artist = artist.toLowerCase();
+		album = album.toLowerCase();
+		if(map.contains(name + " " + artist)) {
+			return null;
+		}
+		songs s = new songs(name, artist);
+		s.setAlbum(album);
+		s.setYear(Integer.valueOf(year));
+		return s;
 	}
 }
