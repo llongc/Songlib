@@ -35,7 +35,7 @@ public class songs {
 	}
 	@Override
 	public String toString() {
-		return "songs [name=" + name + ", artist=" + artist + ", album=" + album + ", year=" + year + "]";
+		return name + ", by " + artist;
 	}
 	
 	
