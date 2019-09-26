@@ -1,6 +1,6 @@
 package songlib.view;
 
-import javafx.application.Platform;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -16,7 +15,6 @@ import Operations.operation;
 import Song.songs;
 import java.io.IOException;
 import java.util.*;
-import java.util.Optional;
 
 public class SongLibController {
 	@FXML
@@ -36,13 +34,13 @@ public class SongLibController {
 	
 	
 	private ObservableList<songs> obsList;
-	private List<songs> obs;
+//	private List<songs> obs;
 	
 	
 	public void start(Stage mainStage) throws IOException {
 		// create an ObservableList 
 		// from an ArrayList  
-		obs = operation.loadlib();
+		List<songs> obs = operation.loadlib();
 		
 		obsList = FXCollections.observableArrayList(obs); 
 		
@@ -93,6 +91,31 @@ public class SongLibController {
 		input.setVisible(false);
 	}
 	
+	public void ask(ActionEvent e) {
+		Node source = (Node) e.getSource();
+	    Window theStage = source.getScene().getWindow();
+	    
+	    Dialog<Boolean> dialog = new Dialog<>();
+		dialog.initOwner(theStage);
+		dialog.setTitle("Warning");
+		dialog.setHeaderText("Are you sure you want to delete it?");
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+		dialog.show();
+		
+	    dialog.setResultConverter((ButtonType button) -> {
+	    	if(button == ButtonType.OK) {
+	    		int index = listView.getSelectionModel().getSelectedIndex();
+	    		boolean res = operation.delete(index);
+	    		if(res) {
+	    			obsList.remove(index);
+	    		}
+	    		return res;
+	    	}
+	    	return false;
+	    });
+	}
+	
 	public void confirmation(ActionEvent e) {
 		if(aecheck.isSelected()) {
 			System.out.println("add");
@@ -104,10 +127,10 @@ public class SongLibController {
                 alert.showAndWait();
                 return;
     		}
-			songs result = operation.add(nname.getText(), 
+			List<songs> result = operation.add(nname.getText(), 
 					nartist.getText(), nalbum.getText(), nyear.getText());
 			if(result == null) {
-	    		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	    		Alert alert = new Alert(Alert.AlertType.WARNING);
 	    		alert.setContentText("This song has already inside the database.");
 	    		alert.showAndWait();
 	    		return;
@@ -115,10 +138,28 @@ public class SongLibController {
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setContentText("Successfully add a new song.");
 			alert.showAndWait();
-			obsList.add(result);
+			obsList = FXCollections.observableArrayList(result);
+			listView.setItems(obsList); 
 			input.setVisible(false);
 		} else {
 			System.out.println("edit");
+		    int index = listView.getSelectionModel().getSelectedIndex();
+		    List<songs> res = operation.edit(index, nname.getText(), 
+					nartist.getText(), nalbum.getText(), nyear.getText());
+		    if(res == null) {
+		    	Alert alert = new Alert(Alert.AlertType.WARNING);
+	    		alert.setContentText("Please make sure no conflicts in editing");
+	    		alert.showAndWait();
+	    		return;
+		    } else {
+		    	Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setContentText("Successfully edit a song.");
+				alert.showAndWait();
+				obsList = FXCollections.observableArrayList(res);
+				listView.setItems(obsList); 
+		    	input.setVisible(false);
+		    }
+		    
 		}
 	}
 //	public void addSong(ActionEvent e) {

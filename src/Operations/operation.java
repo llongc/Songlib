@@ -23,13 +23,15 @@ class songComparator implements Comparator<songs>{
 		}
 	}
 }
+
 public class operation {
 	private static Set<String> map = new HashSet<>();
+	private static List<songs> res;
 	
 	public static List<songs> loadlib() throws IOException{
 		String content;
 		
-		List<songs> res = new ArrayList<>();
+		res = new ArrayList<>();
 		
 //		Path pathToFile = Paths.get("songs.txt");
 //	    System.out.println(pathToFile.toAbsolutePath());
@@ -49,10 +51,15 @@ public class operation {
 			map.add(present[0]+" "+present[1]);
 		}
 		
-		Collections.sort(res, new songComparator());
+		sort(res);
 		return res;
 	}
-	public static songs add(String name, String artist, String album, String year) {
+	
+	public static void sort(List<songs> lst) {
+		Collections.sort(lst, new songComparator());
+	}
+	
+	public static List<songs> add(String name, String artist, String album, String year) {
 		
 		name = name.toLowerCase();
 		artist = artist.toLowerCase();
@@ -63,6 +70,43 @@ public class operation {
 		songs s = new songs(name, artist);
 		s.setAlbum(album);
 		s.setYear(Integer.valueOf(year));
-		return s;
+		res.add(s);
+		map.add(name + " " + artist);
+		sort(res);
+		return res;
+	}
+	public static List<songs> edit(int index, String name, String artist, String album, String year) {
+		name = name.toLowerCase();
+		artist = artist.toLowerCase();
+		album = album.toLowerCase();
+		songs pt = res.get(index);
+		if(map.contains(name + " " + artist)) {
+			System.out.println(pt.getName()+", "+name);
+			System.out.println(pt.getArtist()+", "+artist);
+			if(!pt.getName().equals(name) || !pt.getArtist().equals(artist)) {
+				return null;
+			} else {
+				System.out.println("not change name");
+				pt.setAlbum(album);
+				pt.setYear(Integer.valueOf(year));
+				return res;
+			}
+		}
+		map.remove(pt.getName()+" "+pt.getArtist());
+		pt.setName(name);
+		pt.setArtist(artist);
+		pt.setAlbum(album);
+		pt.setYear(Integer.valueOf(year));
+		map.add(name + " " + artist);
+		System.out.println("change names");
+		sort(res);
+		System.out.println(res.toString());
+		return res;
+	}
+	public static boolean delete(int index) {
+		songs pt = res.get(index);
+		res.remove(index);
+		map.remove(pt.getName() + " " + pt.getArtist());
+		return true;
 	}
 }

@@ -42,7 +42,7 @@ fx:controller="songlib.view.SongLibController">
          <children>
             <Button fx:id="play" onAction="#display" layoutX="14.0" layoutY="12.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="65.0" text="&gt; PLAY" />
             <Button fx:id="edit" onAction="#addOrEdit" layoutX="114.0" layoutY="54.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="71.0" text="EDIT" />
-            <Button fx:id="delete" layoutX="214.0" layoutY="54.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="71.0" text="DELETE" />
+            <Button fx:id="delete" onAction="#ask" layoutX="214.0" layoutY="54.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="71.0" text="DELETE" />
             <Button fx:id="add" onAction="#addOrEdit" layoutX="14.0" layoutY="54.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="71.0" text="ADD" />
          </children>
       </AnchorPane>
