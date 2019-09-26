@@ -1,0 +1,42 @@
+package Song;
+
+public class songs {
+	private String name;
+	private String artist;
+	private String album;
+	private int year;
+	public songs(String name, String artist) {
+		this.name = name;
+		this.artist = artist;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getArtist() {
+		return artist;
+	}
+	public void setArtist(String artist) {
+		this.artist = artist;
+	}
+	public String getAlbum() {
+		return album;
+	}
+	public void setAlbum(String album) {
+		this.album = album;
+	}
+	public int getYear() {
+		return year;
+	}
+	public void setYear(int year) {
+		this.year = year;
+	}
+	@Override
+	public String toString() {
+		return "songs [name=" + name + ", artist=" + artist + ", album=" + album + ", year=" + year + "]";
+	}
+	
+	
+}
