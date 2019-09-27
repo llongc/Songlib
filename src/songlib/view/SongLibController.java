@@ -81,15 +81,19 @@ public class SongLibController {
 	}
 	
 	public void addOrEdit(ActionEvent e) {
-		input.setVisible(true);
 		Button b = (Button)e.getSource();
 		if(b == add) {
+			input.setVisible(true);
 			aecheck.setSelected(true);
 			nname.clear();
 			nartist.clear();
 			nalbum.clear();
 			nyear.clear();
 		} else {
+			if(obsList.size() == 0) {
+				return;
+			}
+			input.setVisible(true);
 			aecheck.setSelected(false);
 			songs selectedSong = listView.getSelectionModel().getSelectedItem();
 			nname.setText(selectedSong.getName());
@@ -106,13 +110,21 @@ public class SongLibController {
 	}
 	
 	public void ask(ActionEvent e) {
+		if(obsList.size() == 0) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Warning");
+            alert.setContentText("Nothing can be deleted");
+            alert.showAndWait();
+            return;
+		}
+		songs selectedSong = listView.getSelectionModel().getSelectedItem();
 		Node source = (Node) e.getSource();
 	    Window theStage = source.getScene().getWindow();
 	    
 	    Dialog<Boolean> dialog = new Dialog<>();
 		dialog.initOwner(theStage);
 		dialog.setTitle("Warning");
-		dialog.setHeaderText("Are you sure you want to delete it?");
+		dialog.setHeaderText("Are you sure you want to delete " + selectedSong.toString() + "?");
 		DialogPane dialogPane = dialog.getDialogPane();
 		dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		dialog.show();
