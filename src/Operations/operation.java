@@ -1,5 +1,7 @@
 package Operations;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
@@ -27,6 +29,7 @@ class songComparator implements Comparator<songs>{
 public class operation {
 	private static Set<String> map = new HashSet<>();
 	private static List<songs> res;
+	private static int nextSong = -1;
 	
 	public static List<songs> loadlib() throws IOException{
 		String content;
@@ -43,10 +46,14 @@ public class operation {
 		
 		
 		for(String str : cont) {
-			String[] present = str.split(",");
+			String[] present = str.split(",",-1);
+
+			if(present.length != 4) {
+				continue;
+			}
 			songs s = new songs(present[0],present[1]);
 			s.setAlbum(present[2]);
-			s.setYear(Integer.parseInt(present[3]));
+			s.setYear(present[3]);
 			res.add(s);
 			map.add(present[0]+" "+present[1]);
 		}
@@ -69,10 +76,11 @@ public class operation {
 		}
 		songs s = new songs(name, artist);
 		s.setAlbum(album);
-		s.setYear(Integer.valueOf(year));
+		s.setYear(year);
 		res.add(s);
 		map.add(name + " " + artist);
 		sort(res);
+		nextSong = res.indexOf(s);
 		return res;
 	}
 	public static List<songs> edit(int index, String name, String artist, String album, String year) {
@@ -81,14 +89,13 @@ public class operation {
 		album = album.toLowerCase();
 		songs pt = res.get(index);
 		if(map.contains(name + " " + artist)) {
-			System.out.println(pt.getName()+", "+name);
-			System.out.println(pt.getArtist()+", "+artist);
+
 			if(!pt.getName().equals(name) || !pt.getArtist().equals(artist)) {
 				return null;
 			} else {
-				System.out.println("not change name");
+//				System.out.println("not change name");
 				pt.setAlbum(album);
-				pt.setYear(Integer.valueOf(year));
+				pt.setYear(year);
 				return res;
 			}
 		}
@@ -96,17 +103,36 @@ public class operation {
 		pt.setName(name);
 		pt.setArtist(artist);
 		pt.setAlbum(album);
-		pt.setYear(Integer.valueOf(year));
+		pt.setYear(year);
 		map.add(name + " " + artist);
-		System.out.println("change names");
+		
 		sort(res);
-		System.out.println(res.toString());
 		return res;
 	}
+	
 	public static boolean delete(int index) {
 		songs pt = res.get(index);
 		res.remove(index);
 		map.remove(pt.getName() + " " + pt.getArtist());
 		return true;
+	}
+	public static int getIndex() {
+		return nextSong;
+	}
+	
+	public static void writeFile() {
+		try {
+			FileWriter writer = new FileWriter("src/Operations/songs.txt");
+			BufferedWriter buffer = new BufferedWriter(writer);
+			for(songs s: res) {
+				String sb = s.getName()+","+s.getArtist()+","+s.getAlbum()+","+s.getYear();
+				buffer.write(sb);
+				buffer.newLine();
+			}
+			buffer.close();
+			
+		} catch (IOException e) {
+			System.err.format("IOException: %s%n", e);
+		}
 	}
 }

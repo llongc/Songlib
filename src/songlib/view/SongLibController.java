@@ -36,6 +36,8 @@ public class SongLibController {
 	private ObservableList<songs> obsList;
 //	private List<songs> obs;
 	
+//	kataomoi,aimer,daydream,2016
+//	torches,aimer,torches,2019
 	
 	public void start(Stage mainStage) throws IOException {
 		// create an ObservableList 
@@ -45,25 +47,37 @@ public class SongLibController {
 		obsList = FXCollections.observableArrayList(obs); 
 		
 		listView.setItems(obsList); 
-		
-		// select the first item
-	    listView.getSelectionModel().select(0);
 	    
-	    name.setText(obs.get(0).getName());
-	    artist.setText(obs.get(0).getArtist());
-	    album.setText(obs.get(0).getAlbum());
-	    year.setText(""+obs.get(0).getYear());
+	    if(obs.size() > 0) {
+	    	// select the first item
+		    selectlist(0);
+	    }
 	    
 
 	    
 	}
 	
+	public void selectlist(int index) {
+		if(index == -1) {
+			name.setText("");
+			artist.setText("");
+			album.setText("");
+			year.setText("");
+			return;
+		}
+		listView.getSelectionModel().select(index);
+	    
+    	name.setText(obsList.get(index).getName());
+	    artist.setText(obsList.get(index).getArtist());
+	    album.setText(obsList.get(index).getAlbum());
+	    year.setText(obsList.get(index).getYear());
+	}
 	public void display(ActionEvent e) {
 		songs selectedSong = listView.getSelectionModel().getSelectedItem();
 		name.setText(selectedSong.getName());
 		artist.setText(selectedSong.getArtist());
 	    album.setText(selectedSong.getAlbum());
-	    year.setText(""+selectedSong.getYear());
+	    year.setText(selectedSong.getYear());
 	}
 	
 	public void addOrEdit(ActionEvent e) {
@@ -81,7 +95,7 @@ public class SongLibController {
 			nname.setText(selectedSong.getName());
 			nartist.setText(selectedSong.getArtist());
 		    nalbum.setText(selectedSong.getAlbum());
-		    nyear.setText(""+selectedSong.getYear());
+		    nyear.setText(selectedSong.getYear());
 		}
 		
 		
@@ -110,6 +124,13 @@ public class SongLibController {
 	    		if(res) {
 	    			obsList.remove(index);
 	    		}
+	    		
+				if(obsList.size() == 0){
+					selectlist(-1);
+				} else if(index != obsList.size()) {
+					selectlist(index);
+				}
+				input.setVisible(false);
 	    		return res;
 	    	}
 	    	return false;
@@ -117,9 +138,20 @@ public class SongLibController {
 	}
 	
 	public void confirmation(ActionEvent e) {
+		if(!nyear.getText().isEmpty()) {
+    		try {
+    			Integer.parseInt(nyear.getText());
+    		} catch(Exception exc) {
+    			Alert alert = new Alert(Alert.AlertType.WARNING);
+    			alert.setTitle("Warning");
+                alert.setContentText("You need to enter the integer for year.");
+                alert.showAndWait();
+                return;
+    		}
+		}
 		if(aecheck.isSelected()) {
 			System.out.println("add");
-    		if(nname.getText().isEmpty() || nname.getText().isEmpty()) {
+    		if(nname.getText().isEmpty() || nartist.getText().isEmpty()) {
     			Alert alert = new Alert(Alert.AlertType.WARNING);
     			alert.setTitle("Warning");
                 alert.setHeaderText("Required Fields Empty");
@@ -140,6 +172,9 @@ public class SongLibController {
 			alert.showAndWait();
 			obsList = FXCollections.observableArrayList(result);
 			listView.setItems(obsList); 
+			int index = operation.getIndex();
+			System.out.println(index);
+			selectlist(index);
 			input.setVisible(false);
 		} else {
 			System.out.println("edit");
@@ -156,64 +191,9 @@ public class SongLibController {
 				alert.setContentText("Successfully edit a song.");
 				alert.showAndWait();
 				obsList = FXCollections.observableArrayList(res);
-				listView.setItems(obsList); 
-		    	input.setVisible(false);
+				listView.setItems(obsList);
 		    }
 		    
 		}
 	}
-//	public void addSong(ActionEvent e) {
-//		Node source = (Node) e.getSource();
-//	    Window theStage = source.getScene().getWindow();
-//	    
-//	    Dialog<songs> dialog = new Dialog<>();
-//		dialog.initOwner(theStage);
-//		dialog.setTitle("NEW SONG");
-//		dialog.setHeaderText("Please specify…");
-//		DialogPane dialogPane = dialog.getDialogPane();
-//		dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-//		
-//		
-//	    TextField nname = new TextField();
-//	    nname.setPromptText("Name: ");
-//	    TextField nartist = new TextField();
-//	    nartist.setPromptText("Artist: ");
-//	    TextField nalbum = new TextField();
-//	    nalbum.setPromptText("Album: ");
-//	    TextField nyear = new TextField();
-//	    nyear.setPromptText("Year: ");
-//	    dialogPane.setContent(new VBox(5, nname, nartist, nalbum, nyear));
-//	    Platform.runLater(nname::requestFocus);
-//
-//	    dialog.setResultConverter((ButtonType button) -> {
-//	    	if(button == ButtonType.OK) {
-//	    		if(nname.getText().isEmpty() || nname.getText().isEmpty()) {
-//	    			Alert alert = new Alert(Alert.AlertType.WARNING);
-//	    			alert.setTitle("Warning");
-//	                alert.setHeaderText("Required Fields Empty");
-//	                alert.setContentText("You need to fill out name and artist at least.");
-//	                alert.showAndWait();
-//	                return null;
-//	    		}
-//	    		songs result = operation.add(nname.getText(), 
-//	    				nartist.getText(), nalbum.getText(), nyear.getText());
-//	    		if(result == null) {
-//		    		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//		    		alert.setContentText("This song has already inside the database.");
-//		    		alert.showAndWait();
-//		    		return null;
-//	    		} else {
-//	    			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//		    		alert.setContentText("Successfully add new song.");
-//		    		alert.showAndWait();
-//	    			return result;
-//	    		}
-//	    	}
-//	    	return null;
-//	    });
-//	    Optional<songs> optionalResult = dialog.showAndWait();
-//	    if (optionalResult.isPresent()) { obsList.add(optionalResult.get()); }
-//		
-//	    
-//	}
 }

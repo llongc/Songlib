@@ -6,9 +6,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-//import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-import songlib.view.SongLibController;;
+import songlib.view.SongLibController;
+import Operations.operation;
 
 public class SongLib extends Application{
 	@Override
@@ -30,6 +30,9 @@ public class SongLib extends Application{
 		
 	}
 	
+	public void stop() {
+		operation.writeFile();
+	}
 	public static void main(String[] args) {
 		launch(args);
 	}

@@ -4,7 +4,7 @@ public class songs {
 	private String name;
 	private String artist;
 	private String album;
-	private int year;
+	private String year;
 	public songs(String name, String artist) {
 		this.name = name;
 		this.artist = artist;
@@ -27,10 +27,10 @@ public class songs {
 	public void setAlbum(String album) {
 		this.album = album;
 	}
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
-	public void setYear(int year) {
+	public void setYear(String year) {
 		this.year = year;
 	}
 	@Override
