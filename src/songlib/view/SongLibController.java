@@ -73,6 +73,9 @@ public class SongLibController {
 	    year.setText(obsList.get(index).getYear());
 	}
 	public void display(ActionEvent e) {
+		if(obsList.size() == 0) {
+			return;
+		}
 		songs selectedSong = listView.getSelectionModel().getSelectedItem();
 		name.setText(selectedSong.getName());
 		artist.setText(selectedSong.getArtist());
