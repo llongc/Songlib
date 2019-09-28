@@ -34,7 +34,7 @@ public class SongLibController {
 	
 	
 	private ObservableList<songs> obsList;
-//	private List<songs> obs;
+
 	
 //	kataomoi,aimer,daydream,2016
 //	torches,aimer,torches,2019
