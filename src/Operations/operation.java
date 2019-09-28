@@ -96,6 +96,7 @@ public class operation {
 //				System.out.println("not change name");
 				pt.setAlbum(album);
 				pt.setYear(year);
+				nextSong = index;
 				return res;
 			}
 		}
@@ -107,6 +108,7 @@ public class operation {
 		map.add(name + " " + artist);
 		
 		sort(res);
+		nextSong = res.indexOf(pt);
 		return res;
 	}
 	

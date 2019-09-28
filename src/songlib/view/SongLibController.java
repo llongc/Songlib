@@ -208,7 +208,13 @@ public class SongLibController {
 				obsList = FXCollections.observableArrayList(res);
 				listView.setItems(obsList);
 		    }
-		    
+		    input.setVisible(false);
+		    int i = operation.getIndex();
+		    songs pt = obsList.get(i);
+			name.setText(pt.getName());
+			artist.setText(pt.getArtist());
+		    album.setText(pt.getAlbum());
+		    year.setText(pt.getYear());
 		}
 	}
 }
