@@ -138,11 +138,16 @@ public class SongLibController {
 	    		boolean res = operation.delete(index);
 	    		if(res) {
 	    			obsList.remove(index);
+	    			
 	    		}
 	    		
 				if(obsList.size() == 0){
 					selectlist(-1);
-				} else if(index != obsList.size()) {
+				}else if(index == obsList.size()){
+					selectlist(index-1);
+				
+				}else if(index != obsList.size()) {
+				
 					selectlist(index);
 				}
 				input.setVisible(false);
