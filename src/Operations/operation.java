@@ -40,7 +40,7 @@ public class operation {
 //		Path pathToFile = Paths.get("songs.txt");
 //	    System.out.println(pathToFile.toAbsolutePath());
 	    
-		content = new String(Files.readAllBytes(Paths.get("src/Operations/songs.txt")));
+		content = new String(Files.readAllBytes(Paths.get("songs.txt")));
 //		System.out.println(content);
 		
 		String[] cont = content.split("\\n");
@@ -125,7 +125,7 @@ public class operation {
 	
 	public static void writeFile() {
 		try {
-			FileWriter writer = new FileWriter("src/Operations/songs.txt");
+			FileWriter writer = new FileWriter("songs.txt");
 			BufferedWriter buffer = new BufferedWriter(writer);
 			for(songs s: res) {
 				String sb = s.getName()+","+s.getArtist()+","+s.getAlbum()+","+s.getYear();
