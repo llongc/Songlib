@@ -1,3 +1,4 @@
+//Name: Liqin Long, Satita Vittayaareekul
 package songlib.app;
 
 import java.io.IOException;
